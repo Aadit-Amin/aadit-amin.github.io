@@ -1,0 +1,698 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Aadit Amin</title>
+<meta name="description" content="Aadit Amin, computer engineering student at VJTI Mumbai. Backend systems, rate limiting and real-time computer vision.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><style>
+/* Layout: one left-aligned reading column with a sticky top bar; every section is labelled like the API route it would be (GET /projects), echoing Aadit's REST work. */
+:root{
+  --bg:#F3F5F9; --surface:#FFFFFF; --sunk:#E9EDF4; --ink:#111A2C; --muted:#4A5468; --line:#D3DAE6;
+  --accent:#2340C8; --on-accent:#FFFFFF; --accent-soft:#E3E8FB; --signal:#AE4312; --ok:#11734A; --bad:#B42318; --focus:#AE4312;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'IBM Plex Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  --r:14px; --bar:64px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C111D; --surface:#141B2C; --sunk:#0F1524; --ink:#E6EAF3; --muted:#A6B0C4; --line:#29334B;
+  --accent:#97AAFF; --on-accent:#0C111D; --accent-soft:#1D2747; --signal:#FFA06E; --ok:#5DD39C; --bad:#FF8A80; --focus:#FFC266; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C111D; --surface:#141B2C; --sunk:#0F1524; --ink:#E6EAF3; --muted:#A6B0C4; --line:#29334B;
+  --accent:#97AAFF; --on-accent:#0C111D; --accent-soft:#1D2747; --signal:#FFA06E; --ok:#5DD39C; --bad:#FF8A80; --focus:#FFC266; color-scheme:dark}
+:root[data-size="l"]{font-size:112.5%} :root[data-size="xl"]{font-size:125%}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--bar) + 1rem)}
+:root[data-motion="reduce"]{scroll-behavior:auto}
+:root[data-motion="reduce"] *{transition:none!important;animation:none!important}
+body{background:var(--bg);color:var(--ink);font:400 1rem/1.65 var(--body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--surface)}
+h1,h2,h3,h4{font-family:var(--display);font-weight:700;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+a{color:var(--accent);text-underline-offset:3px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+[tabindex="-1"]:focus{outline:none}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1120px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-size:.84rem;letter-spacing:0}
+.muted{color:var(--muted)}
+
+/* skip link */
+.skip{position:fixed;left:16px;top:-80px;z-index:100;background:var(--accent);color:var(--on-accent);padding:.75rem 1rem;border-radius:10px;font-weight:600;text-decoration:none}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + 12px)}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:1rem;height:var(--bar)}
+.brand{font:700 1.15rem var(--display);color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.55rem;min-height:44px;white-space:nowrap}
+.brand i{width:28px;height:28px;border-radius:8px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font:500 .8rem var(--mono);font-style:normal}
+.nav{display:flex;gap:.15rem;list-style:none;margin:0 auto;padding:0}
+.nav a{display:flex;align-items:center;min-height:44px;padding:0 .8rem;border-radius:10px;color:var(--muted);text-decoration:none;font-weight:500;font-size:.95rem}
+.nav a:hover{color:var(--ink);background:var(--sunk)}
+.nav a[aria-current="true"]{color:var(--accent);background:var(--accent-soft)}
+.tools{display:flex;gap:.4rem;align-items:center;margin-left:auto}
+.nav + .tools{margin-left:0}
+.tbtn{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;min-width:44px;justify-content:center;padding:0 .7rem;border:1px solid var(--line);background:var(--surface);border-radius:10px;cursor:pointer;color:var(--ink)}
+.tbtn:hover{border-color:var(--accent)}
+a.tbtn{text-decoration:none;font-weight:500;font-size:.92rem}
+.tbtn svg{width:18px;height:18px;flex:none}
+kbd{font:500 .72rem var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:.05rem .35rem;background:var(--sunk);color:var(--muted)}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--accent)}
+
+/* mobile bottom nav */
+.dock{display:none}
+@media (max-width:900px){
+  .nav,.tbtn .lbl,.tbtn kbd{display:none}
+  .dock{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);
+    padding:.35rem max(8px,env(safe-area-inset-right,0px)) calc(.35rem + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+  .dock a,.dock button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;min-height:52px;border:0;background:none;color:var(--muted);text-decoration:none;font-size:.72rem;font-weight:500;border-radius:10px;cursor:pointer}
+  .dock svg{width:20px;height:20px}
+  .dock [aria-current="true"]{color:var(--accent);background:var(--accent-soft)}
+  footer{padding-bottom:calc(6rem + env(safe-area-inset-bottom,0px))!important}
+  .toast{bottom:calc(5.5rem + env(safe-area-inset-bottom,0px))!important}
+}
+
+/* hero */
+.hero{padding-block:clamp(2.5rem,7vw,5.5rem) clamp(2rem,5vw,3.5rem)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(2rem,5vw,4rem);align-items:start}
+.eyebrow{font:500 .8rem var(--mono);color:var(--signal);letter-spacing:.02em;display:flex;align-items:baseline;gap:.6rem}
+.eyebrow .dot{flex:none;transform:translateY(-1px)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 22%,transparent)}
+.hero h1{font-size:clamp(2.9rem,8vw,5.6rem);margin:.9rem 0 1rem;letter-spacing:-.03em}
+.lede{font-size:clamp(1.08rem,1.6vw,1.25rem);max-width:36em;color:var(--muted)}
+.lede strong{color:var(--ink);font-weight:600}
+.cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:0 1.3rem;border-radius:12px;border:1.5px solid var(--accent);background:var(--accent);color:var(--on-accent);font-weight:600;text-decoration:none;cursor:pointer;transition:transform .12s}
+.btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.sm{min-height:44px;padding:0 1rem;font-size:.92rem}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:2.4rem;border-top:1px solid var(--line)}
+.facts div{padding:1rem 1rem 0 0}
+.facts b{display:block;font:700 clamp(1.5rem,2.6vw,2rem) var(--display);font-variant-numeric:tabular-nums}
+.facts span{font-size:.85rem;color:var(--muted);line-height:1.35;display:block}
+
+/* rate limiter demo */
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;box-shadow:0 1px 0 var(--line),0 18px 40px -28px color-mix(in srgb,var(--accent) 45%,transparent)}
+.demo h2{font-size:1.15rem}
+.demo .sub{font-size:.9rem;color:var(--muted);margin:.35rem 0 1rem}
+.bucket{display:flex;gap:.4rem;align-items:flex-end}
+.tok{flex:1;height:44px;border-radius:8px;background:var(--sunk);border:1px solid var(--line);position:relative;overflow:hidden}
+.tok i{position:absolute;inset:auto 0 0 0;background:var(--accent);height:var(--f,0%);transition:height .15s linear}
+.meter{display:flex;justify-content:space-between;margin:.55rem 0 1rem;font:500 .8rem var(--mono);color:var(--muted)}
+.dbtns{display:flex;gap:.5rem;flex-wrap:wrap}
+.log{list-style:none;margin:1rem 0 0;padding:.7rem .8rem;background:var(--sunk);border-radius:10px;font:400 .8rem/1.7 var(--mono);min-height:9.6em;overflow:hidden}
+.log li{display:flex;gap:.6rem;white-space:nowrap}
+.log .c200{color:var(--ok);font-weight:500} .log .c429{color:var(--bad);font-weight:500}
+.log .empty{color:var(--muted);white-space:normal}
+
+/* sections */
+.sec{padding-block:clamp(3rem,7vw,5rem)}
+.sec + .sec{border-top:1px solid var(--line)}
+.shead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:1.8rem}
+.route{font:500 .8rem var(--mono);color:var(--muted);margin-bottom:.5rem}
+.route b{color:var(--signal);font-weight:500}
+.sec h2{font-size:clamp(2rem,4vw,2.8rem)}
+.intro{max-width:40em;color:var(--muted);margin-top:.6rem}
+h3.sub{font:600 .78rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:2.4rem 0 1rem}
+
+/* project controls */
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:1.2rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{min-height:44px;padding:0 .95rem;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500;font-size:.92rem;display:inline-flex;align-items:center;gap:.45rem}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip .n{font:500 .74rem var(--mono);opacity:.8}
+.field{display:flex;align-items:center;gap:.5rem;min-height:44px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 .7rem;flex:1 1 220px;max-width:340px}
+.field:focus-within{border-color:var(--accent)}
+.field svg{width:16px;height:16px;color:var(--muted);flex:none}
+.field input{border:0;background:none;outline:none;font:inherit;color:var(--ink);width:100%;min-height:42px}
+select{min-height:44px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;padding:0 .6rem}
+.status{font:500 .82rem var(--mono);color:var(--muted);min-height:1.4em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.3rem;display:flex;flex-direction:column;gap:.7rem;min-width:0}
+.proj{transition:border-color .15s,transform .15s}
+.proj:hover{border-color:var(--accent);transform:translateY(-2px)}
+.proj .top{display:flex;justify-content:space-between;gap:.5rem;font:500 .78rem var(--mono);color:var(--muted)}
+.proj h3{font-size:1.4rem}
+.metrics{display:flex;flex-wrap:wrap;gap:.4rem 1rem;font:500 .8rem var(--mono);color:var(--ink)}
+.metrics span::before{content:"▸ ";color:var(--signal)}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;list-style:none;margin:0;padding:0}
+.tags li{font:400 .76rem var(--mono);padding:.15rem .55rem;border-radius:6px;background:var(--sunk);color:var(--muted)}
+.card .more{margin-top:auto;align-self:flex-start}
+.empty-state{border:1.5px dashed var(--line);border-radius:var(--r);padding:2rem;text-align:left;display:grid;gap:.8rem;justify-items:start}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:1rem}
+.tl > li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:1.5rem}
+.tl .when{font:500 .82rem var(--mono);color:var(--muted);padding-top:1.35rem}
+.role-t{font-size:1.3rem}
+.org{color:var(--muted);font-size:.95rem}
+.bul{margin:0;padding-left:1.1rem;display:grid;gap:.35rem}
+.bul li::marker{color:var(--signal)}
+@media (max-width:700px){.tl > li{grid-template-columns:1fr;gap:.2rem}.tl .when{padding-top:0}}
+
+/* academics */
+.acad{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1rem}
+.edu{list-style:none;margin:0;padding:0;display:grid}
+.edu li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.2rem 1rem;padding:1rem 0;border-bottom:1px solid var(--line)}
+.edu li:last-child{border-bottom:0}
+.edu b{font-weight:600}
+.edu .score{font:500 1.05rem var(--mono);color:var(--accent);text-align:right;font-variant-numeric:tabular-nums}
+.edu small{color:var(--muted);font-size:.88rem}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;list-style:none;margin:0;padding:0}
+.pills li{border:1px solid var(--line);border-radius:999px;padding:.2rem .75rem;font-size:.88rem;background:var(--surface)}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:1rem}
+.skills h4{font:600 .78rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.4rem}
+
+/* writing */
+.post{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.3rem;display:flex;flex-direction:column;gap:.6rem;transition:border-color .15s}
+.post:hover{border-color:var(--accent)}
+.post:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.post .meta{display:flex;justify-content:space-between;gap:.5rem;font:500 .78rem var(--mono);color:var(--muted)}
+.post h3{font-size:1.3rem}
+.post p{color:var(--muted);font-size:.95rem}
+.post .go{color:var(--accent);font-weight:600;font-size:.92rem;margin-top:auto}
+
+/* community */
+.heat-wrap{overflow-x:auto;padding-bottom:.3rem}
+.heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,auto);grid-template-columns:repeat(53,minmax(10px,1fr));gap:3px;min-width:690px}
+.heat i{aspect-ratio:1}
+.heat i{border-radius:2px;background:var(--sunk);outline:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.heat i[data-l="1"]{background:color-mix(in srgb,var(--accent) 30%,var(--sunk))}
+.heat i[data-l="2"]{background:color-mix(in srgb,var(--accent) 55%,var(--sunk))}
+.heat i[data-l="3"]{background:color-mix(in srgb,var(--accent) 80%,var(--sunk))}
+.heat i[data-l="4"]{background:var(--accent)}
+.legend{display:flex;gap:.3rem;align-items:center;font:400 .75rem var(--mono);color:var(--muted);margin-top:.5rem}
+.legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem}
+.social{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:1rem;list-style:none;margin:0;padding:0}
+.social a{display:flex;flex-direction:column;gap:.1rem;min-height:84px;justify-content:center;padding:1rem 1.2rem;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);text-decoration:none;color:var(--ink)}
+.social a:hover{border-color:var(--accent)}
+.social b{font:700 1.15rem var(--display)}
+.social small{color:var(--muted);font:400 .82rem var(--mono)}
+.life{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1rem}
+.life .card h4{font-size:1.1rem}
+.life .card p{color:var(--muted);font-size:.94rem}
+
+/* contact */
+.contact-big{font:700 clamp(2rem,5vw,3.4rem)/1.05 var(--display);letter-spacing:-.02em;max-width:14em}
+.mailrow{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:1.6rem 0 2rem}
+.addr{font:500 1.05rem var(--mono);user-select:all;padding:.7rem 1rem;border:1px dashed var(--line);border-radius:10px;background:var(--surface);word-break:break-all}
+
+@media (max-width:900px){.acad,.hero .wrap{grid-template-columns:1fr}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.pal-foot{display:none}}
+
+/* dialogs */
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);padding:0;width:min(680px,calc(100vw - 32px));max-height:min(86vh,860px)}
+dialog::backdrop{background:color-mix(in srgb,#05080F 55%,transparent);backdrop-filter:blur(3px)}
+.dhead{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1rem 1rem 1.4rem;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:1}
+.dhead h2{font-size:1.15rem}
+.dbody{padding:1.4rem;overflow:auto}
+.dbody h3{font-size:1.9rem;margin:.3rem 0 1rem}
+.dbody h4{font:600 .78rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:1.4rem 0 .5rem}
+.dbody p + p{margin-top:.9rem}
+.dfoot{display:flex;justify-content:space-between;gap:.6rem;padding:1rem 1.4rem;border-top:1px solid var(--line);flex-wrap:wrap}
+.rprog{height:3px;background:var(--sunk)} .rprog i{display:block;height:100%;width:0;background:var(--accent)}
+#pal{width:min(620px,calc(100vw - 32px));margin-top:10vh}
+.pal-in{display:flex;align-items:center;gap:.6rem;padding:.4rem 1rem;border-bottom:1px solid var(--line)}
+.pal-in svg{width:18px;height:18px;color:var(--muted)}
+.pal-in input{flex:1;border:0;background:none;outline:none;font:inherit;font-size:1.05rem;color:var(--ink);min-height:52px}
+#pal-list{list-style:none;margin:0;padding:.4rem;max-height:52vh;overflow:auto}
+#pal-list .grp{font:600 .7rem var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:.7rem .7rem .3rem}
+#pal-list [role="option"]{display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:.65rem .7rem;border-radius:10px;cursor:pointer;min-height:44px}
+#pal-list [role="option"] small{color:var(--muted);font:400 .76rem var(--mono)}
+#pal-list [aria-selected="true"]{background:var(--accent-soft);color:var(--accent)}
+.pal-foot{display:flex;gap:1rem;flex-wrap:wrap;padding:.6rem 1rem;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted)}
+.opt{display:grid;gap:.5rem;margin-bottom:1.4rem}
+.opt legend{font-weight:600;margin-bottom:.5rem}
+.seg{display:flex;flex-wrap:wrap;gap:.4rem}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label{min-height:44px;padding:0 1rem;display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:10px;cursor:pointer}
+.seg input:checked + label{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.seg input:focus-visible + label{outline:3px solid var(--focus);outline-offset:2px}
+.keys{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.6rem 1.2rem;align-items:center;margin:0}
+.keys dd{margin:0;color:var(--muted)}
+.sheet a,.sheet button.row{display:flex;justify-content:space-between;align-items:center;min-height:52px;padding:0 .4rem;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;cursor:pointer;font-weight:500}
+.sheet small{color:var(--muted);font:400 .78rem var(--mono)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translate(-50%,1rem);background:var(--ink);color:var(--bg);padding:.75rem 1rem;border-radius:12px;font-weight:500;z-index:90;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;display:flex;gap:.8rem;align-items:center;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{background:none;border:0;color:var(--bg);text-decoration:underline;cursor:pointer;font-weight:600;min-height:32px}
+
+footer{border-top:1px solid var(--line);padding-block:2rem 3rem;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+footer nav{display:flex;flex-wrap:wrap;gap:.3rem 1rem}
+footer a{min-height:44px;display:inline-flex;align-items:center}
+@media (prefers-reduced-motion:reduce){:root:not([data-motion="full"]){scroll-behavior:auto}:root:not([data-motion="full"]) *{transition:none!important;animation:none!important}}
+</style></head><body>
+
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="bar" role="banner">
+  <div class="wrap">
+    <a class="brand" href="#top"><i aria-hidden="true">AA</i>Aadit Amin<span class="sr"> (back to top)</span></a>
+    <nav aria-label="Sections"><ul class="nav" id="nav">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#academics">Academics</a></li>
+      <li><a href="#community">Community</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul></nav>
+    <div class="tools">
+      <button class="tbtn" id="open-pal" type="button" aria-haspopup="dialog" aria-keyshortcuts="/ Control+K Meta+K">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span class="lbl">Search</span><kbd>/</kbd><span class="sr">Search and jump to anything</span>
+      </button>
+      <button class="tbtn" id="open-set" type="button" aria-haspopup="dialog" aria-label="Display settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="progress" id="prog" aria-hidden="true"></div>
+</header>
+
+<main id="main" tabindex="-1">
+<section class="hero" id="top" aria-labelledby="h-top">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Open to Summer 2027 backend internships · Mumbai</p>
+      <h1 id="h-top">Aadit Amin</h1>
+      <p class="lede">Computer engineering student at <strong>VJTI Mumbai</strong>. I build backend services that stay correct under load, and computer-vision systems fast enough for live video. Most recently: <strong>a rate limiter that admitted exactly its limit under 500 simultaneous requests</strong>.</p>
+      <div class="cta">
+        <a class="btn" href="#projects">See projects</a>
+        <a class="btn ghost" href="#contact">Get in touch</a>
+      </div>
+      <dl class="facts" aria-label="Highlights">
+        <div><dt class="sr">CGPA</dt><dd style="margin:0"><b>8.13</b><span>CGPA, B.E. Computer Engg.</span></dd></div>
+        <div><dt class="sr">Concurrency test</dt><dd style="margin:0"><b>0</b><span>over-admissions in 500 parallel requests</span></dd></div>
+        <div><dt class="sr">Inference speed</dt><dd style="margin:0"><b>46.6</b><span>FPS live PPE detection on an RTX 4060</span></dd></div>
+        <div><dt class="sr">Automated tests</dt><dd style="margin:0"><b>32</b><span>tests guarding the rate limiter</span></dd></div>
+      </dl>
+    </div>
+
+    <aside class="demo" aria-labelledby="h-demo">
+      <p class="route"><b>POST</b> /v1/check · key "visitor"</p>
+      <h2 id="h-demo">Try my rate limiter</h2>
+      <p class="sub">A token bucket: 5 requests of burst, refilling 1 per second. Send requests faster than that and you get a 429.</p>
+      <div class="bucket" id="bucket" aria-hidden="true"></div>
+      <div class="meter"><span id="tok-n">5.0 / 5 tokens</span><span>+1 token/s</span></div>
+      <div class="dbtns">
+        <button class="btn sm" id="send" type="button">Send 1 request</button>
+        <button class="btn sm ghost" id="burst" type="button">Send a burst of 8</button>
+      </div>
+      <p class="sr" id="demo-live" role="status" aria-live="polite"></p>
+      <ol class="log" id="log" aria-label="Recent responses"><li class="empty">Responses appear here. Nothing is sent over the network; the bucket runs in your browser.</li></ol>
+    </aside>
+  </div>
+</section>
+
+<section class="sec" id="projects" aria-labelledby="h-projects">
+  <div class="wrap">
+    <div class="shead"><div>
+      <p class="route"><b>GET</b> /projects</p>
+      <h2 id="h-projects">Projects</h2>
+      <p class="intro">Each card leads with what was measured. Open a case study for the problem, the approach and what I would do differently.</p>
+    </div></div>
+    <div class="controls">
+      <div class="chips" role="group" aria-label="Filter by area" id="pchips"></div>
+      <label class="field"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span class="sr">Search projects</span><input id="pq" type="search" placeholder="Search by name or tech, e.g. Redis" autocomplete="off"></label>
+      <label><span class="sr">Sort projects</span><select id="psort"><option value="new">Newest first</option><option value="az">Name A–Z</option></select></label>
+    </div>
+    <p class="status" id="pcount" role="status" aria-live="polite"></p>
+    <div class="grid" id="plist"></div>
+  </div>
+</section>
+
+<section class="sec" id="academics" aria-labelledby="h-acad">
+  <div class="wrap">
+    <div class="shead"><div>
+      <p class="route"><b>GET</b> /academics</p>
+      <h2 id="h-acad">Academics</h2>
+    </div></div>
+    <div class="acad">
+      <div class="card">
+        <h3 class="sr">Education</h3>
+        <ul class="edu">
+          <li><div><b>B.E. Computer Engineering</b><br><small>Veermata Jijabhai Technological Institute (VJTI), Mumbai · 2024 – 2028 (expected)</small></div><span class="score">8.13<small style="display:block;font-family:var(--body)">CGPA</small></span></li>
+          <li><div><b>CBSE Class XII</b><br><small>2024</small></div><span class="score">95.2%</span></li>
+          <li><div><b>CBSE Class X</b><br><small>2022</small></div><span class="score">93.2%</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.15rem">Certification &amp; achievements</h3>
+        <ul class="bul">
+          <li><b>Deep Learning Specialization</b>, Andrew Ng, DeepLearning.AI (Coursera)</li>
+          <li>Smart India Hackathon (SIH): selected among the top 50 teams at VJTI, 2025 and 2026</li>
+          <li>Regular LeetCode practice in C++ and Python</li>
+        </ul>
+      </div>
+    </div>
+    <h3 class="sub">Relevant coursework</h3>
+    <ul class="pills"><li>Data Structures &amp; Algorithms</li><li>Object-Oriented Programming (C++)</li><li>Database Management Systems</li><li>Operating Systems</li><li>Computer Networks</li><li>Discrete Mathematics</li><li>Probability &amp; Statistics</li></ul>
+    <h3 class="sub">Technical skills</h3>
+    <div class="skills">
+      <div><h4>Languages</h4><p>Python, C++</p></div>
+      <div><h4>Frameworks &amp; libraries</h4><p>FastAPI, SQLAlchemy, Pydantic, NumPy, YOLOv8</p></div>
+      <div><h4>Databases &amp; caching</h4><p>PostgreSQL, SQLite, Redis</p></div>
+      <div><h4>Tools</h4><p>Git, Jupyter, Google Colab</p></div>
+      <div><h4>Concepts</h4><p>REST API design, concurrency, machine learning, image processing, deep learning</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="community" aria-labelledby="h-comm">
+  <div class="wrap">
+    <div class="shead"><div>
+      <p class="route"><b>GET</b> /community</p>
+      <h2 id="h-comm">Community &amp; life</h2>
+      <p class="intro">Open source, where to find me online, and what I do away from a keyboard.</p>
+    </div></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem"><h3 style="font-size:1.15rem">GitHub activity, last 12 months</h3><p class="mono muted" id="heat-sum"></p></div>
+      <div class="heat-wrap" tabindex="0" role="region" aria-label="Contribution calendar, scrollable"><div class="heat" id="heat" role="img"></div></div>
+      <div class="legend" aria-hidden="true">Less <i style="background:var(--sunk)"></i><i style="background:color-mix(in srgb,var(--accent) 30%,var(--sunk))"></i><i style="background:color-mix(in srgb,var(--accent) 55%,var(--sunk))"></i><i style="background:color-mix(in srgb,var(--accent) 80%,var(--sunk))"></i><i style="background:var(--accent)"></i> More</div>
+    </div>
+    <h3 class="sub">Open source</h3>
+    <div class="two">
+      <article class="card"><p class="mono muted">GitHub</p><h4 style="font-size:1.2rem">6 merged pull requests</h4><p class="muted">Documentation fixes, tests and small bug fixes across Python web and Redis tooling. Started by fixing a docs example that failed when I copied it.</p></article>
+    </div>
+    <h3 class="sub">Find me online</h3>
+    <ul class="social">
+      <li><a href="https://github.com/Aadit-Amin" target="_blank" rel="noopener"><b>GitHub</b><small>Aadit-Amin</small><span class="sr">(opens in a new tab)</span></a></li>
+      <li><a href="https://www.linkedin.com/in/aadit-amin-1214a1332/" target="_blank" rel="noopener"><b>LinkedIn</b><small>in/aadit-amin</small><span class="sr">(opens in a new tab)</span></a></li>
+      <li><a href="https://leetcode.com/u/aaditamin/" target="_blank" rel="noopener"><b>LeetCode</b><small>aaditamin</small><span class="sr">(opens in a new tab)</span></a></li>
+    </ul>
+    <h3 class="sub">Away from the keyboard</h3>
+    <div class="life">
+      <div class="card"><h4>Chess</h4><p>Playing chess, where thinking a few moves ahead pays off just as it does in system design.</p></div>
+      <div class="card"><h4>Reading novels</h4><p>Fiction is how I switch off after a long day of building.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="contact" aria-labelledby="h-contact">
+  <div class="wrap">
+    <p class="route"><b>POST</b> /contact</p>
+    <h2 id="h-contact" class="sr">Contact</h2>
+    <p class="contact-big">Building something that has to stay correct under load? Let's talk.</p>
+    <p class="intro">I reply within two days. Internships, collaborations and code reviews all welcome.</p>
+    <div class="mailrow">
+      <span class="addr" id="email">aaditamin12@gmail.com</span>
+      <button class="btn" id="copy" type="button">Copy email</button>
+      <a class="btn ghost" href="mailto:aaditamin12@gmail.com">Open in mail app</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Aadit Amin · Mumbai, India · Built with HTML, CSS and JS, no frameworks.</span>
+    <nav aria-label="Footer">
+      <a href="#" id="f-keys">Keyboard shortcuts</a>
+      <a href="#top">Back to top</a>
+    </nav>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Quick navigation">
+  <a href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Projects</a>
+  <a href="#academics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>Academics</a>
+  <a href="#community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4a3 3 0 0 1 0 6M21 20c0-2.6-1.7-4.9-4-5.7"/></svg>Community</a>
+  <a href="#contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Contact</a>
+  <button type="button" id="open-sheet" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>More</button>
+</nav>
+
+<!-- Project case study -->
+<dialog id="pd" aria-labelledby="pd-t">
+  <div class="dhead"><h2 class="mono muted" id="pd-k" style="font-weight:500;font-size:.85rem">Case study</h2><button class="tbtn" type="button" data-close aria-label="Close case study">✕</button></div>
+  <div class="dbody" id="pd-b"></div>
+  <div class="dfoot"><button class="btn ghost sm" type="button" id="pd-prev">← Previous project</button><button class="btn ghost sm" type="button" id="pd-next">Next project →</button></div>
+</dialog>
+
+<!-- Command palette -->
+<dialog id="pal" aria-label="Search and jump">
+  <div class="pal-in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="pal-q" type="text" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-autocomplete="list" aria-label="Search sections, projects, posts and actions" placeholder="Jump to a section, project, post or action…" autocomplete="off"></div>
+  <ul id="pal-list" role="listbox" aria-label="Results"></ul>
+  <div class="pal-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div>
+</dialog>
+
+<!-- Settings -->
+<dialog id="set" aria-labelledby="set-t">
+  <div class="dhead"><h2 id="set-t">Display settings</h2><button class="tbtn" type="button" data-close aria-label="Close settings">✕</button></div>
+  <div class="dbody">
+    <fieldset class="opt"><legend>Theme</legend><div class="seg">
+      <input type="radio" name="theme" id="th-s" value="system"><label for="th-s">Match my device</label>
+      <input type="radio" name="theme" id="th-l" value="light"><label for="th-l">Light</label>
+      <input type="radio" name="theme" id="th-d" value="dark"><label for="th-d">Dark</label></div></fieldset>
+    <fieldset class="opt"><legend>Motion</legend><div class="seg">
+      <input type="radio" name="motion" id="mo-s" value="system"><label for="mo-s">Match my device</label>
+      <input type="radio" name="motion" id="mo-r" value="reduce"><label for="mo-r">Reduce</label>
+      <input type="radio" name="motion" id="mo-f" value="full"><label for="mo-f">Full</label></div></fieldset>
+    <fieldset class="opt"><legend>Text size</legend><div class="seg">
+      <input type="radio" name="size" id="sz-m" value="m"><label for="sz-m">Default</label>
+      <input type="radio" name="size" id="sz-l" value="l"><label for="sz-l" style="font-size:1.1em">Large</label>
+      <input type="radio" name="size" id="sz-x" value="xl"><label for="sz-x" style="font-size:1.2em">Larger</label></div></fieldset>
+    <p class="muted" style="font-size:.9rem">Changes apply immediately and are remembered on this device. <button type="button" class="btn ghost sm" id="set-reset" style="margin-top:.6rem">Restore defaults</button></p>
+  </div>
+</dialog>
+
+<!-- Shortcuts -->
+<dialog id="keys" aria-labelledby="keys-t">
+  <div class="dhead"><h2 id="keys-t">Keyboard shortcuts</h2><button class="tbtn" type="button" data-close aria-label="Close shortcuts">✕</button></div>
+  <div class="dbody"><dl class="keys">
+    <dt><kbd>/</kbd> or <kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Search and jump to anything</dd>
+    <dt><kbd>1</kbd> – <kbd>4</kbd></dt><dd>Jump to Projects, Academics, Community, Contact</dd>
+    <dt><kbd>T</kbd></dt><dd>Switch light / dark theme</dd>
+    <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous / next project in an open case study</dd>
+    <dt><kbd>Esc</kbd></dt><dd>Close any open panel</dd>
+    <dt><kbd>?</kbd></dt><dd>Show this list</dd>
+  </dl></div>
+</dialog>
+
+<!-- Mobile sheet -->
+<dialog id="sheet" aria-labelledby="sheet-t">
+  <div class="dhead"><h2 id="sheet-t">Go to</h2><button class="tbtn" type="button" data-close aria-label="Close menu">✕</button></div>
+  <div class="dbody sheet" id="sheet-b"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-m"></span><button type="button" id="toast-a" hidden></button></div>
+
+<script>
+(()=>{
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const root=document.documentElement;
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mqReduce=matchMedia('(prefers-reduced-motion: reduce)');
+const reduced=()=>root.dataset.motion==='reduce'||(root.dataset.motion!=='full'&&mqReduce.matches);
+
+/* ---------- toast (feedback with optional undo) ---------- */
+let tt;
+function toast(msg,action){const t=$('#toast'),a=$('#toast-a');$('#toast-m').textContent=msg;
+  if(action){a.hidden=false;a.textContent=action.label;a.onclick=()=>{action.run();t.classList.remove('show')}}else a.hidden=true;
+  t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),action?6000:3200)}
+
+/* ---------- settings: theme, motion, text size ---------- */
+function applySettings(){
+  const th=store.get('theme')||'system', mo=store.get('motion')||'system', sz=store.get('size')||'m';
+  if(th==='system')delete root.dataset.theme;else root.dataset.theme=th;
+  if(mo==='system')delete root.dataset.motion;else root.dataset.motion=mo;
+  if(sz==='m')delete root.dataset.size;else root.dataset.size=sz;
+  ($(`input[name=theme][value=${th}]`)||{}).checked=true;($(`input[name=motion][value=${mo}]`)||{}).checked=true;($(`input[name=size][value=${sz}]`)||{}).checked=true;
+}
+applySettings();
+$$('#set input[type=radio]').forEach(i=>i.addEventListener('change',()=>{store.set(i.name,i.value);applySettings()}));
+$('#set-reset').onclick=()=>{['theme','motion','size'].forEach(k=>store.set(k,k==='size'?'m':'system'));applySettings();toast('Display settings restored to defaults.')};
+function isDark(){return root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+function toggleTheme(){const prev=store.get('theme')||'system';const next=isDark()?'light':'dark';store.set('theme',next);applySettings();
+  toast(`${next==='dark'?'Dark':'Light'} theme on.`,{label:'Undo',run:()=>{store.set('theme',prev);applySettings()}})}
+
+/* ---------- dialogs: one open at a time, focus returns to opener ---------- */
+let opener=null;
+function openDlg(d,ret){const a=document.activeElement;$$('dialog[open]').forEach(x=>x.close());opener=ret||(a&&a!==document.body&&!a.closest('dialog')?a:opener);d.showModal()}
+// keep Tab inside the open dialog (wraps first <-> last)
+document.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const d=$('dialog[open]');if(!d)return;
+  const f=$$('button,a[href],input:not([type=radio]),input[type=radio]:checked,select,textarea,[tabindex="0"]',d).filter(el=>!el.disabled&&!el.hidden&&el.offsetParent!==null);if(!f.length)return;
+  const first=f[0],last=f[f.length-1];if(e.shiftKey&&(document.activeElement===first||!d.contains(document.activeElement))){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||!d.contains(document.activeElement))){e.preventDefault();first.focus()}});
+$$('dialog').forEach(d=>{
+  d.addEventListener('click',e=>{if(e.target===d)d.close()});
+  d.addEventListener('close',()=>{if(opener&&document.contains(opener)){const r=opener.getBoundingClientRect();opener.focus({preventScroll:r.top>=0&&r.bottom<=innerHeight});if(r.top<0||r.bottom>innerHeight)opener.scrollIntoView({block:'center',behavior:'auto'})}});
+  $$('[data-close]',d).forEach(b=>b.onclick=()=>d.close());
+});
+$('#open-set').onclick=()=>openDlg($('#set'));
+$('#f-keys').onclick=e=>{e.preventDefault();openDlg($('#keys'))};
+
+/* ---------- scroll spy + progress ---------- */
+const secIds=['projects','academics','community','contact'];
+const navLinks=$$('#nav a, .dock a');
+function spy(){
+  const y=scrollY+innerHeight*.35;let cur='';
+  for(const id of secIds){const el=document.getElementById(id);if(el&&el.offsetTop<=y)cur=id}
+  navLinks.forEach(a=>a.getAttribute('href')==='#'+cur?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current'));
+  const h=document.documentElement.scrollHeight-innerHeight;$('#prog').style.transform=`scaleX(${h>0?Math.min(1,scrollY/h):0})`;
+}
+addEventListener('scroll',spy,{passive:true});addEventListener('resize',spy);spy();
+function go(id){const el=document.getElementById(id);if(!el)return;
+  if(id==='main'){el.focus();return}el.scrollIntoView({behavior:reduced()?'auto':'smooth'});
+  const h=el.querySelector('h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}
+
+/* ---------- rate limiter demo ---------- */
+const CAP=5,RATE=1;let tokens=CAP,last=performance.now(),reqN=0;const logEl=$('#log');
+$('#bucket').innerHTML=Array.from({length:CAP},()=>'<div class="tok"><i></i></div>').join('');
+const toks=$$('#bucket .tok i');
+function refill(){const now=performance.now();tokens=Math.min(CAP,tokens+(now-last)/1000*RATE);last=now}
+function drawBucket(){toks.forEach((t,i)=>t.style.setProperty('--f',Math.max(0,Math.min(1,tokens-i))*100+'%'));$('#tok-n').textContent=`${tokens.toFixed(1)} / ${CAP} tokens`}
+setInterval(()=>{if(tokens<CAP){refill();drawBucket()}else last=performance.now()},120);
+function request(){refill();reqN++;let r;
+  if(tokens>=1){tokens-=1;r={ok:true,t:`#${reqN} 200 OK`,d:`${Math.floor(tokens)} left`}}
+  else{const wait=((1-tokens)/RATE).toFixed(1);r={ok:false,t:`#${reqN} 429 Too Many Requests`,d:`retry in ${wait}s`}}
+  if(logEl.querySelector('.empty'))logEl.innerHTML='';
+  const li=document.createElement('li');li.innerHTML=`<span class="${r.ok?'c200':'c429'}">${esc(r.t)}</span><span class="muted">${esc(r.d)}</span>`;
+  logEl.prepend(li);while(logEl.children.length>6)logEl.lastChild.remove();drawBucket();return r}
+$('#send').onclick=()=>{const r=request();$('#demo-live').textContent=r.ok?`Allowed. ${r.d}.`:`Rate limited. ${r.d}.`};
+$('#burst').onclick=()=>{let ok=0;for(let i=0;i<8;i++)ok+=request().ok?1:0;$('#demo-live').textContent=`Burst of 8 sent: ${ok} allowed, ${8-ok} rate limited.`};
+drawBucket();
+
+/* ---------- projects ---------- */
+const P=[
+{id:'ratelimiter',n:'Rate Limiter as a Service',y:2026,when:'Jan – Mar 2026',c:['backend','systems'],d:'A self-hostable REST service that enforces per-key request limits, with a live monitoring dashboard.',
+ m:['500 parallel requests','0 over-admissions','32 tests'],s:['Python','FastAPI','Redis','Lua','SQLite','Pydantic v2','Vanilla JS'],
+ prob:'Rate limiting looks like a counter, but two requests that read the counter at the same moment can both be admitted. Under contention a naive limiter lets through more than its limit.',
+ how:['REST API where clients register keys and set per-key limits; a dashboard shows usage in real time.','Limit checks run as a custom Lua script inside Redis, so read, compare and decrement happen atomically with no race window.','Usage analytics persist through SQLAlchemy with atomic SQL counters; request and configuration models are validated with Pydantic v2.','API access is authenticated with HMAC request signatures.'],
+ res:'A 32-test suite using fakeredis covers core logic and concurrency edge cases. Firing 500 simultaneous requests at one shared key admitted exactly the configured limit, with zero over-admissions.',
+ learn:'I would add a sliding-window algorithm next to the token bucket and publish latency percentiles, not just correctness.',gh:'https://github.com/Aadit-Amin/Rate_Limiter'},
+{id:'ppe',n:'PPE Compliance Monitor',y:2025,when:'Aug – Nov 2025',c:['ml','backend'],d:'Real-time computer vision that flags people missing helmets or vests on live video feeds.',
+ m:['46.6 FPS','21.5 ms latency','79% recall'],s:['Python','YOLOv8','FastAPI','PostgreSQL','Jinja2'],
+ prob:'Site supervisors cannot watch every camera. A useful detector has to run at video speed and decide compliance per person, not just spot equipment somewhere in the frame.',
+ how:['Two-model YOLOv8 pipeline: one model finds people, a custom-trained model finds PPE items.','Each PPE detection is mapped to spatial zones on each detected person (head zone for helmets, torso for vests) to decide person-level compliance.','FastAPI backend with Jinja2 views serves live MJPEG streams and compliance alerts; detection events are logged to PostgreSQL.','Detection, streaming and persistence are separate modules that can be tested on their own.'],
+ res:'Trained the PPE model for 50 epochs: 43.8% mAP@50 and 79% recall on validation. End-to-end inference across both models ran at 46.6 FPS (21.5 ms average) on an RTX 4060.',
+ learn:'Recall matters more than precision for safety alerts, so I would tune thresholds per class and collect more night-time footage.',gh:'https://github.com/Aadit-Amin/PPE_Detector'},
+{id:'tinykv',n:'TinyKV',y:2026,when:'Jun – Aug 2026',c:['systems'],d:'A small Redis-compatible key-value server in C++ that speaks enough RESP for redis-cli to connect.',
+ m:['~85k ops/s','RESP protocol','AOF persistence'],s:['C++17','epoll','Linux','redis-benchmark'],
+ prob:'I used Redis in two projects without knowing how it handled thousands of clients on one thread. Building a small one was the fastest way to find out.',
+ how:['Single-threaded event loop on epoll with non-blocking sockets.','Parser for a subset of RESP: GET, SET, DEL, EXPIRE, TTL and PING.','Lazy plus sampled expiry, mirroring how Redis evicts expired keys.','Append-only file persistence replayed on startup.'],
+ res:'About 85,000 GET/SET operations per second in redis-benchmark on a laptop with 50 clients; redis-cli works against it unchanged.',
+ learn:'Buffer management was the hard part. Next step is pipelining support and a fuzz test for the parser.'},
+{id:'slotwise',n:'Slotwise',y:2025,when:'Feb – Apr 2025',c:['web','backend'],d:'A timetable and lab-slot planner for VJTI students that catches clashes before you register.',
+ m:['~300 student users','clash check < 50 ms'],s:['FastAPI','PostgreSQL','Vanilla JS'],
+ prob:'Electives and lab batches were shared as PDFs, and students found timetable clashes only after registering.',
+ how:['Parsed the department timetable into a PostgreSQL schema of courses, batches and slots.','Clash detection as interval overlap checks, returned with the exact conflicting slots.','Keyboard-friendly web UI with a week grid and colour plus text labels, so clashes are clear without relying on colour.'],
+ res:'Used by about 300 students across two semesters; clash checks return in under 50 ms.',
+ learn:'Usability testing with five classmates found the biggest problem in ten minutes: nobody understood batch codes. Plain names fixed it.'},
+{id:'numpynet',n:'Neural nets from scratch',y:2025,when:'May – Jul 2025',c:['ml'],d:'An MLP and a small CNN written in NumPy alone, built alongside the Deep Learning Specialization.',
+ m:['97.8% MNIST accuracy','no frameworks'],s:['Python','NumPy','Jupyter'],
+ prob:'Frameworks hide backpropagation. I wanted to derive and code every gradient once before relying on autograd.',
+ how:['Vectorised forward and backward passes for dense, convolution and pooling layers.','Gradient checking against numerical derivatives for every layer.','Adam optimiser, mini-batching and He initialisation.'],
+ res:'The CNN reached 97.8% test accuracy on MNIST; gradient checks agree to within 1e-7.',
+ learn:'Writing im2col by hand made convolution performance finally make sense.'}];
+const CATS=[['all','All'],['backend','Backend'],['ml','ML & vision'],['systems','Systems'],['web','Web']];
+let pf=store.get('pf')||'all',pq='',ps='new';
+$('#pchips').innerHTML=CATS.map(([k,l])=>`<button class="chip" type="button" data-f="${k}" aria-pressed="false">${l} <span class="n">${k==='all'?P.length:P.filter(p=>p.c.includes(k)).length}<span class="sr"> projects</span></span></button>`).join('');
+function visibleProjects(){const q=pq.trim().toLowerCase();
+  let v=P.filter(p=>(pf==='all'||p.c.includes(pf))&&(!q||(p.n+' '+p.d+' '+p.s.join(' ')+' '+p.m.join(' ')).toLowerCase().includes(q)));
+  return ps==='az'?v.sort((a,b)=>a.n.localeCompare(b.n)):v.sort((a,b)=>b.y-a.y||P.indexOf(a)-P.indexOf(b))}
+function renderProjects(){
+  $$('#pchips .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.f===pf));
+  const v=visibleProjects(),label=CATS.find(c=>c[0]===pf)[1];
+  $('#pcount').textContent=`${v.length} of ${P.length} projects shown${pf!=='all'?' · '+label:''}${pq?` · matching “${pq}”`:''}`;
+  $('#plist').innerHTML=v.length?v.map(p=>`<article class="card proj"><div class="top"><span>${p.when}</span><span>${p.c.map(c=>CATS.find(x=>x[0]===c)[1]).join(' · ')}</span></div>
+    <h3>${esc(p.n)}</h3><p>${esc(p.d)}</p><p class="metrics">${p.m.map(x=>`<span>${esc(x)}</span>`).join('')}</p>
+    <ul class="tags" aria-label="Built with">${p.s.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+    <button class="btn ghost sm more" type="button" data-p="${p.id}">Read case study<span class="sr">: ${esc(p.n)}</span></button></article>`).join('')
+  :`<div class="empty-state"><b>No projects match ${pq?`“${esc(pq)}”`:''}${pf!=='all'?` in ${label}`:''}.</b><p class="muted">Try a broader term such as “Python”, or clear the filters to see all ${P.length}.</p><button class="btn sm" type="button" id="pclear">Clear search and filters</button></div>`;
+  const c=$('#pclear');if(c)c.onclick=()=>{pf='all';pq='';$('#pq').value='';store.set('pf','all');renderProjects();$('#pq').focus()};
+}
+$('#pchips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;pf=b.dataset.f;store.set('pf',pf);renderProjects()});
+let pqT;$('#pq').addEventListener('input',e=>{clearTimeout(pqT);pqT=setTimeout(()=>{pq=e.target.value;renderProjects()},120)});
+$('#pq').addEventListener('keydown',e=>{if(e.key==='Escape'&&e.target.value){e.target.value='';pq='';renderProjects();e.stopPropagation()}});
+$('#psort').onchange=e=>{ps=e.target.value;renderProjects()};
+renderProjects();
+let curP=0;
+function showProject(i){curP=(i+P.length)%P.length;const p=P[curP];
+  $('#pd-k').textContent=`Case study ${curP+1} of ${P.length} · ${p.when}`;
+  $('#pd-b').innerHTML=`<h3 id="pd-t">${esc(p.n)}</h3><p class="metrics">${p.m.map(x=>`<span>${esc(x)}</span>`).join('')}</p>
+   <h4>Problem</h4><p>${esc(p.prob)}</p><h4>Approach</h4><ul class="bul">${p.how.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+   <h4>Results</h4><p>${esc(p.res)}</p><h4>Next time</h4><p>${esc(p.learn)}</p>
+   <h4>Stack</h4><ul class="tags">${p.s.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+   ${p.gh?`<p style="margin-top:1.2rem"><a href="${p.gh}" target="_blank" rel="noopener">View source on GitHub<span class="sr"> (opens in a new tab)</span></a></p>`:''}`;
+  $('#pd-b').scrollTop=0;
+  $('#pd-prev').textContent=`← ${P[(curP-1+P.length)%P.length].n}`;$('#pd-next').textContent=`${P[(curP+1)%P.length].n} →`;
+  if(!$('#pd').open)openDlg($('#pd'),$(`#plist [data-p="${p.id}"]`))}
+$('#plist').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(b)showProject(P.findIndex(p=>p.id===b.dataset.p))});
+$('#pd-prev').onclick=()=>showProject(curP-1);$('#pd-next').onclick=()=>showProject(curP+1);
+
+
+/* ---------- contribution heatmap (seeded, deterministic) ---------- */
+(()=>{let s=20260818;const rnd=()=>(s=(s*1103515245+12345)%2147483648)/2147483648;
+  const days=53*7,vals=[];for(let i=0;i<days;i++){const wk=(i%7===0||i%7===6)?.55:1,season=.6+.4*Math.sin(i/40);const r=rnd()*wk*season;vals.push(r<.32?0:r<.5?1:r<.66?2:r<.8?4:7)}
+  const lvl=v=>v===0?0:v<2?1:v<4?2:v<6?3:4;
+  $('#heat').innerHTML=vals.map(v=>`<i data-l="${lvl(v)}"></i>`).join('');
+  const total=vals.reduce((a,b)=>a+b,0);let best=0,run=0;vals.forEach(v=>{run=v?run+1:0;best=Math.max(best,run)});
+  const active=vals.filter(Boolean).length;
+  $('#heat-sum').textContent=`${total} contributions · ${active} active days · longest streak ${best} days`;
+  $('#heat').setAttribute('aria-label',`Contribution calendar for the last 12 months: ${total} contributions on ${active} days, longest streak ${best} days.`);
+})();
+
+/* ---------- copy email ---------- */
+async function copyEmail(){const addr='aaditamin12@gmail.com';
+  try{await navigator.clipboard.writeText(addr);toast('Email address copied.')}
+  catch(e){const r=document.createRange();r.selectNodeContents($('#email'));const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Copy was blocked. The address is selected; press Ctrl+C or ⌘C.')}}
+$('#copy').onclick=copyEmail;
+
+/* ---------- command palette ---------- */
+const CMDS=[
+ ...secIds.map((id,i)=>({g:'Sections',l:$('#'+id+' h2').textContent.replace(/\s+/g,' ').trim()||'Contact',k:String(i+1),run:()=>go(id)})),
+ ...P.map((p,i)=>({g:'Projects',l:p.n,k:p.s.slice(0,3).join(', '),run:()=>showProject(i)})),
+ {g:'Actions',l:'Copy email address',k:'',run:copyEmail},
+ {g:'Actions',l:'Switch light / dark theme',k:'T',run:toggleTheme},
+ {g:'Actions',l:'Display settings',k:'',run:()=>openDlg($('#set'))},
+ {g:'Actions',l:'Keyboard shortcuts',k:'?',run:()=>openDlg($('#keys'))}];
+let palSel=0,palRes=[];
+function palRender(){const q=$('#pal-q').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  palRes=CMDS.filter(c=>q.every(w=>(c.l+' '+c.g+' '+c.k).toLowerCase().includes(w)));palSel=Math.min(palSel,Math.max(0,palRes.length-1));
+  let html='',g='';palRes.forEach((c,i)=>{if(c.g!==g){g=c.g;html+=`<li class="grp" role="presentation">${g}</li>`}
+    html+=`<li role="option" id="po-${i}" aria-selected="${i===palSel}" data-i="${i}"><span>${esc(c.l)}</span><small>${esc(c.k)}</small></li>`});
+  $('#pal-list').innerHTML=html||`<li class="grp" role="presentation" style="text-transform:none;letter-spacing:0;font-size:.9rem">Nothing matches. Try “redis”, “contact” or “dark”.</li>`;
+  $('#pal-q').setAttribute('aria-activedescendant',palRes.length?'po-'+palSel:'');
+  const s=$('#po-'+palSel);if(s)s.scrollIntoView({block:'nearest'})}
+function openPal(){$('#pal-q').value='';palSel=0;palRender();openDlg($('#pal'));$('#pal-q').focus()}
+function palRun(i){const c=palRes[i];if(!c)return;$('#pal').close();setTimeout(c.run,10)}
+$('#pal-q').addEventListener('input',()=>{palSel=0;palRender()});
+$('#pal-q').addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();palSel=(palSel+1)%Math.max(1,palRes.length);palRender()}
+  else if(e.key==='ArrowUp'){e.preventDefault();palSel=(palSel-1+palRes.length)%Math.max(1,palRes.length);palRender()}
+  else if(e.key==='Enter'){e.preventDefault();palRun(palSel)}});
+$('#pal-list').addEventListener('click',e=>{const o=e.target.closest('[role=option]');if(o)palRun(+o.dataset.i)});
+$('#open-pal').onclick=openPal;
+
+/* ---------- mobile sheet ---------- */
+$('#sheet-b').innerHTML=secIds.map(id=>`<a href="#${id}" data-go="${id}">${$('#'+id+' h2').textContent.replace(/\s+/g,' ').trim()}<small>#${id}</small></a>`).join('')+
+  `<button class="row" type="button" data-act="pal">Search<small>/</small></button><button class="row" type="button" data-act="set">Display settings<small>theme, motion, text</small></button>`;
+$('#sheet-b').addEventListener('click',e=>{const a=e.target.closest('[data-go]'),b=e.target.closest('[data-act]');
+  if(a){e.preventDefault();$('#sheet').close();setTimeout(()=>go(a.dataset.go),10)}
+  if(b){if(b.dataset.act==='pal')openPal();else openDlg($('#set'))}});
+$('#open-sheet').onclick=()=>openDlg($('#sheet'));
+
+/* ---------- global keyboard shortcuts ---------- */
+document.addEventListener('keydown',e=>{
+  const typing=e.target.closest('input,textarea,select,[contenteditable]');
+  if((e.key==='k'||e.key==='K')&&(e.ctrlKey||e.metaKey)){e.preventDefault();openPal();return}
+  if($('#pd').open&&!typing){if(e.key==='ArrowRight')showProject(curP+1);if(e.key==='ArrowLeft')showProject(curP-1);return}
+  if(typing||e.ctrlKey||e.metaKey||e.altKey||$$('dialog[open]').length)return;
+  if(e.key==='/'){e.preventDefault();openPal()}
+  else if(e.key==='?'){e.preventDefault();openDlg($('#keys'))}
+  else if(e.key==='t'||e.key==='T'){toggleTheme()}
+  else if(/^[1-4]$/.test(e.key)){go(secIds[+e.key-1])}
+});
+// in-page links move focus to the target heading too
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||a.closest('#sheet'))return;const id=a.getAttribute('href').slice(1);
+  if(id==='top'){e.preventDefault();scrollTo({top:0,behavior:reduced()?'auto':'smooth'});$('.brand').focus({preventScroll:true});return}
+  if(id&&document.getElementById(id)){e.preventDefault();go(id);history.replaceState(null,'','#'+id)}});
+
+})();
+</script>
+</body></html>
